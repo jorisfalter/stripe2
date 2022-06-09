@@ -1,58 +1,31 @@
 import React, { useState, useEffect } from "react";
 import "./App.css";
-import ProductPriceData from './productPrice'
-
-const ProductDisplay = () => (
-  <section>
-    <div className="product">
-      <img
-        src="https://i.imgur.com/EHyR2nP.png"
-        alt="The cover of Stubborn Attachments"
-      />
-      <div className="description">
-      <h3>Stubborn Attachments</h3>
-      <h5>$20.00</h5>
-      </div>
-    </div>
-    <form action="/create-checkout-session" method="POST">
-      <button type="submit">
-        Checkout
-      </button>
-    </form>
-  </section>
-);
 
 
-const Message = ({ message }) => (
-  <section>
-    <p>{message}</p>
-  </section>
-);
 
-export default function App() {
-  const [message, setMessage] = useState("");
 
-  useEffect(() => {
-    // Check to see if this is a redirect back from Checkout
-    const query = new URLSearchParams(window.location.search);
+function App() {
+  
+  const PPData = ({product}) => { return <div> {product}</div>}
 
-    if (query.get("success")) {
-      setMessage("Order placed! You will receive an email confirmation.");
-    }
+  async function retrieveData(){
 
-    if (query.get("canceled")) {
-      setMessage(
-        "Order canceled -- continue to shop around and checkout when you're ready."
-      );
-    }
-  }, []);
+    const stripe = require('stripe')('sk_test_Qhlg8l7ENnP76PA46huUw6EP00gbE3htI0');
 
-  return message ? (
-    <Message message={message} />
-  ) : (
+    const product = await stripe.products.retrieve(
+      'prod_LnkBjRm0picUEO'
+    );
+    console.log(product)
+
+    return product
+  }
+
+  return (
     <div>
-    <ProductDisplay />
-    <ProductPriceData />
+    <PPData />
+    hello world 
     </div>
   );
 }
+
+export default App;
